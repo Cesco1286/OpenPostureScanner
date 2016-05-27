@@ -10,7 +10,7 @@ vidRGB = videoinput('kinect',1,'RGB_640x480');
 vidDepth = videoinput('kinect',2,'Depth_640x480');
 srcDepth = getselectedsource(vidDepth);
 
-% interattività per mettere a posto l'angolazione
+% interattivitÃ  per mettere a posto l'angolazione
 preview(vidRGB);
 while angleOK==0,
     
@@ -18,7 +18,7 @@ while angleOK==0,
 	if srcDepth.CameraElevationAngle+angle>=0 & srcDepth.CameraElevationAngle+angle<=27
     srcDepth.CameraElevationAngle=srcDepth.CameraElevationAngle+angle;
 	end
-    angleOK=input('se l''angolo è ok inserire 1, 0 altrimenti');
+    angleOK=input('se l''angolo Ã¨ ok inserire 1, 0 altrimenti');
    
 end
 closepreview(vidRGB);
@@ -44,13 +44,20 @@ trigger([vidDepth vidRGB]); %cattura i frame
 [imgColor, ts_rgb, metaDataRGB] = getdata(vidRGB);
 
 
-% controllo su "metaData.isSkeletonTracked" -> se è 1, possiamo fermare l'acquisizione,altrimenti dobbiamo riottenere i metadati.(sia DEPTH che RGB)
-%
-while metaDataDepth.IsSkeletonTracked==0,
-    trigger([vidDepth vidRGB]);
-    [frame, ts, metaDataDepth] = getdata(vidDepth);
-    [imgColor, ts_rgb, metaDataRGB] = getdata(vidRGB);
-end
+imshow(imgColor(:,:,1:3),[]);
+answer= input('Is this image ok? y/n ');
+if answer = y || metaDataDepth.IsSkeletonTracked==0,
+    while answer==n || metaDataDepth.IsSkeletonTracked==0,
+        if metaDataDepth.IsSkeletonTracked==0,
+            disp('lo scheletro non Ã¨ stato riconosciuto.');
+        end
+        trigger([vidRGB vidDepth]); 
+        [frame, ts, metaDataDepth] = getdata(vidDepth);
+        [imgColor, ts_rgb, metaDataRGB] = getdata(vidRGB);
+        imshow(imgColor(:,:,1:3),[]);
+        answer= input('Is this image ok? y/n ');
+    end 	
+end			
 
 stop([vidDepth vidRGB]);
 return;
