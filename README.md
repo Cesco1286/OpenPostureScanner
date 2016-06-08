@@ -4,7 +4,9 @@ Analizzatore di postura tramite BalanceBoard della Wii e Kinect per Windows, con
 
 
 <b>TODO</b><br>
+definire le classi sw e le operazioni (guarda modello di dominio )
 acquisizione balance board <br>
 trovare il modo di acquisire pesi e scheletro contemporaneamente <br>
 analizzare la postura <br>
 visualizzare il risultato <br>
+
