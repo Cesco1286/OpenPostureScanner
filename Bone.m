@@ -13,17 +13,19 @@ classdef Bone
     
     methods
         function bone = Bone(jointA, jointB, name)
-            bone.Joint=[jointA, jointB];
-            bone.AngleBone=bone.getAngleBone(bone.Joint);
-            bone.Name=name;
+            if (nargin>0)
+                bone.Joint=[jointA, jointB];
+                bone.AngleBone=bone.getAngleBone(bone.Joint);
+                bone.Name=name;
+            end
         end
         
         %la funzione ritorna l'angolo in gradi che forma la linea tra i due joint passati
         %come parametri rispetto l'asse X
-        %per eliminare l'ambiguit‡ sull'angolo calcolato, si utilizzer‡
+        %per eliminare l'ambiguit√† sull'angolo calcolato, si utilizzer√†
         %come riferimento, il Joint con ascissa minore
-        function [angleBone] = getAngleBone(joint)
-
+        function [angleBone] = getAngleBone(bone,joint)
+            
             if joint(1).GetY<joint(2).GetY,
                 rif=joint(1);
                 oth=joint(2);
