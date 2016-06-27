@@ -10,9 +10,11 @@ classdef Joint
     
     methods
         function joint = Joint(X,Y,name)
-            joint.X=X;
-            joint.Y=Y;
-            joint.Name=name;
+            if (nargin>0)
+                joint.X=X;
+                joint.Y=Y;
+                joint.Name=name;
+            end
         end
         
         function [X]= GetX(joint )
@@ -29,7 +31,7 @@ classdef Joint
             Name=joint.Name;
             return;
         end
-
+        
     end
     
 end
