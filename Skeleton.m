@@ -1,4 +1,10 @@
 %% VERSION 1: Valerio Dodet - DATE: 20/06/2016
+% 
+% BUG durante la costruzione delle ossa a riga 87 quando il contatore i
+% assume valore 2, dice che l'indice eccede la dimensione della matrice ndex exceeds matrix dimensions.
+% 
+% Error in Skeleton (line 87)
+%                     skel.SkeletonBoneMap(i)=Bone(skel.SkeletonJointMap(skel.SkeletonConnectionsMap(i,1)),skel.SkeletonJointMap(skel.SkeletonConnectionsMap(i,2)),skel.BoneNameMap(i,:)); 
 
 
 classdef Skeleton < handle
@@ -7,8 +13,8 @@ classdef Skeleton < handle
     %       Error using Skeleton (line 69)
     %       Dimensions of matrices being concatenated are not consistent.
     
-    properties
-        SkeletonJointMap;
+    
+    properties(Constant = true)
         JointNameMap=char('Hip_Center','Spine','Shoulder_Center','Head','Shoulder_Left','Elbow_Left','Wrist_Left','Hand_Left','Shoulder_Right','Elbow_Right','Wrist_Right','Hand_Right','Hip_Left','Knee_Left','Ankle_Left','Foot_Left','Hip_Right','Knee_Right','Ankle_Right','Foot_Right');
         
         %         %Joint restituiti dalla kinect
@@ -33,7 +39,13 @@ classdef Skeleton < handle
         %         Ankle_Right = 19;
         %         Foot_Right = 20;
         
-        SkeletonBoneMap;
+        BoneNameMap = char('HipBone','schienaBone','HeadBone','LeftShoulderBone','LeftBraccioBone','LeftAvambraccioBone','LeftHandBone','RightShoulderBone','RightBraccioBone','RightAvambraccioBone','RightHandBone','RightHipBone','RightCosciaBone','RightStincoBone','RightFootBone','LeftHipBone','LeftCosciaBone','LeftStincoBone','LeftFootBone');
+        
+        SkeletonConnectionsMap = [[1 2],[2 3],[3 4],[3 5],[5 6],[6 7],[7 8],[3 9],[9 10],[10 11],[11 12],[1 17],[17 18],[18 19],[19 20],[1 13],[13 14],[14 15],[15 16]];
+    end
+    properties
+        SkeletonJointMap=Joint();
+        SkeletonBoneMap=Bone();
         %         SkeletonBoneMap = [
         %             HipBone;
         %             schienaBone;
@@ -56,12 +68,6 @@ classdef Skeleton < handle
         %             LeftFootBone
         %             ];
         
-        BoneNameMap = char('HipBone','schienaBone','HeadBone','LeftShoulderBone','LeftBraccioBone','LeftAvambraccioBone','LeftHandBone','RightShoulderBone','RightBraccioBone','RightAvambraccioBone','RightHandBone','RightHipBone','RightCosciaBone','RightStincoBone','RightFootBone','LeftHipBone','LeftCosciaBone','LeftStincoBone','LeftFootBone');
-        
-        SkeletonConnectionsMap = [[1 2],[2 3],[3 4],[3 5],[5 6],[6 7],[7 8];
-            [3 9],[9 10],[10 11],[11 12],[1 17],[17 18],[18 19],[19 20],[1 13];
-            [13 14],[14 15],[15 16]];
-        
     end
     
     methods
@@ -69,21 +75,30 @@ classdef Skeleton < handle
         %costruttore scheletro, istanzia anche i relativi oggetti Joint e Bone
         %Input: JointImagesIndices matrice 20x2 delle posizioni dei joint
         function skel = Skeleton(JointImagesIndices,TrackID)
-            JointImagesIndices=JointImagesIndices(:,:,TrackID);
-            for i=1:20,
-                skel.SkeletonJointMap(i)=Joint(JointImagesIndices(i,1),JointImagesIndices(i,2),JointNameMap(i));
-            end
-            
-            %inizializzazione ossa scheletro con "Bone(jointA, jointB, name)"
-            for i=1:19,
-                skel.SkeletonBoneMap(i)=Bone(skel.SkeletonJointMap(skel.SkeletonConnectionsMap(i,1)),skel.SkeletonJointMap((skel.SkeletonConnectionsMap(i,2))),skel.BoneNameMap(i,:));
+            if (nargin>0)
+                
+                JointImagesIndices=JointImagesIndices(:,:,TrackID);
+                for i=1:20,
+                    skel.SkeletonJointMap(i)=Joint(JointImagesIndices(i,1),JointImagesIndices(i,2),skel.JointNameMap(i,:));
+                end
+                
+                % inizializzazione ossa scheletro con "Bone(jointA, jointB, name)"
+                for i=1:19,
+                    skel.SkeletonBoneMap(i)=Bone(skel.SkeletonJointMap(skel.SkeletonConnectionsMap(i,1)),skel.SkeletonJointMap(skel.SkeletonConnectionsMap(i,2)),skel.BoneNameMap(i,:));
+                end
             end
             
             return;
         end
         
+%         %costruttore vuoto per scheletro
+%         function skel = Skeleton()
+%             skel;
+%         end
+        
+        
         %la funzione ritorna un oggetto Bone
-        %Input: bone può essere il numero riferito alla posizione in
+        %Input: bone puÃ² essere il numero riferito alla posizione in
         %       SkeletonConnectionMap ma anche il nome dell'osso
         function [bone] = getBone(skel, bone)
             if (bone>0 && bone <20),
