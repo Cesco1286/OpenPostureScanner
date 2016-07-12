@@ -1,10 +1,13 @@
-classdef Kinect
+classdef Kinect < handle
     properties
         vidRGB;
         vidDepth;
         srcDepth;
         DepthFrame;
         RGBFrame;
+        metadati;
+        skeletonId;
+        
     end
     
     methods
@@ -14,7 +17,24 @@ classdef Kinect
         kinect.srcDepth = getselectedsource(kinect.vidDepth);
     
         end
-    
+        
+%         function kinect=set.metadati(kinect,metadati)
+%             kinect.metadati=metadati;
+%         end
+%  
+           function kinect=setMetadati(kinect,metadati)
+               kinect.metadati=metadati;
+           end
+           
+           function kinect=setRGBFrame(kinect,RGBFrame)
+               kinect.RGBFrame=RGBFrame;
+           end
+ 
+           function kinect=setSkeletonId(kinect,skeletonId)
+               kinect.skeletonId=skeletonId;
+           end
+            
+           
         function setAngle(kinect)
         preview(kinect.vidRGB);
         angleOK=0;
@@ -23,37 +43,55 @@ classdef Kinect
             if kinect.srcDepth.CameraElevationAngle+angle>=0 && kinect.srcDepth.CameraElevationAngle+angle<=27
                 kinect.srcDepth.CameraElevationAngle=kinect.srcDepth.CameraElevationAngle+angle;
             end
-            angleOK=input('se l''angolo � ok inserire 1, 0 altrimenti');
+            angleOK=input('se l''angolo è ok inserire 1, 0 altrimenti');
         end
         closepreview(kinect.vidRGB);
         end
 
-        function acquisisci(kinect)
-        kinect.srcDepth.TrackingMode ='Skeleton';
-        kinect.srcDepth.SkeletonsToTrack=1;
-        
-        %specifichiamo il numero di frame memorizzati per trigger
-        kinect.vidDepth.FramesPerTrigger = 1;
-        kinect.vidDepth.TriggerRepeat=200;
-        kinect.vidRGB.TriggerRepeat=200;
-        triggerconfig([kinect.vidDepth kinect.vidRGB],'manual');
+        function kinect = acquisisci(kinect)
+            stop([kinect.vidDepth kinect.vidRGB]);
+            kinect.srcDepth.TrackingMode ='Skeleton';
+            kinect.srcDepth.SkeletonsToTrack=1;
+            
+            %specifichiamo il numero di frame memorizzati per trigger
+            kinect.vidDepth.FramesPerTrigger = 1;
+            kinect.vidDepth.TriggerRepeat=200;
+            kinect.vidRGB.TriggerRepeat=200;
+            triggerconfig([kinect.vidDepth kinect.vidRGB],'manual');
+            
+            %% start acquisizione
+            acquired=0;
+            start([kinect.vidDepth kinect.vidRGB]);
+            while acquired==0,
+                if input('premere 1 per fare una nuova acquisizione\n'),
+                    trigger([kinect.vidDepth kinect.vidRGB]);
+                    [DepthFrame, ts, metaDataDepth] = getdata(kinect.vidDepth);
+                    [RGBFrame, ts_rgb, metaDataRGB] = getdata(kinect.vidRGB);
+                    
+                    % Fixme: attualmente lo skeletonID per lo skeletonViewer viene
+                    % trovato tramite un for.
+                    % Sicuramente c'è un modo per farlo in una sola riga
+                    % skID=metaDataDepth.JointImageIndices(~=0);
+                    % fiXME
+                    for val=1:6,
+                        if metaDataDepth.JointImageIndices(:,:,val)~=0,
+                            skID=val;
+                        end
+                    end
+                    
+                    %skeleton=skeletonViewer(metaDataDepth.JointImageIndices,imgColor,1,skID);
+                    acquired=input('inserire 1 se l''acquisizione è corretta, 0 altrimenti\n');
+                end
+            end
 
-        %% start acquisizione
-        start([kinect.vidDepth kinect.vidRGB]);
-        trigger([kinect.vidDepth kinect.vidRGB]); %cattura i frame
-        [DepthFrame, ts, metaDataDepth] = getdata(kinect.vidDepth);
-        [RGBFrame, ts_rgb, metaDataRGB] = getdata(kinect.vidRGB);
-        while metaDataDepth.IsSkeletonTracked==0,
-            trigger([vidDepth vidRGB]);
-            [DepthFrame, ts, metaDataDepth] = getdata(kinect.vidDepth);
-            [RGBFrame, ts_rgb, metaDataRGB] = getdata(kinect.vidRGB);
-        end
-        stop([kinect.vidDepth kinect.vidRGB]);
-        kinect.DepthFrame= DepthFrame;
-        kinect.RGBFrame= RGBFrame;
+              kinect.setRGBFrame(RGBFrame);
+              kinect.setMetadati(metaDataDepth);
+              kinect.setSkeletonId(skID);
+              stop([kinect.vidDepth kinect.vidRGB]);
+            
         end
         
-        function launchPreview(kinect)
+        function startPreview(kinect)
             preview(kinect.vidRGB);
         end 
         
@@ -61,6 +99,21 @@ classdef Kinect
             closepreview(kinect.vidRGB);
         end 
         
+        function stopCamera(kinect)
+            stop([kinect.vidDepth kinect.vidRGB]);
+        end 
+        
+        function f = getFrameRGB(kinect)
+            f=kinect.RGBFrame;
+        end %fixme
+        
+        function m = getMetaDati(kinect) %fixme
+        m=kinect.metadati;
+        end
+        
+        function m = getSkeletonId(kinect) %fixme
+        m=kinect.skeletonId;
+        end
     end
 end
     
