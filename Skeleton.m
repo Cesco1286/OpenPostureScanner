@@ -1,17 +1,11 @@
 %% VERSION 1: Valerio Dodet - DATE: 20/06/2016
 % 
-% BUG durante la costruzione delle ossa a riga 87 quando il contatore i
-% assume valore 2, dice che l'indice eccede la dimensione della matrice ndex exceeds matrix dimensions.
 % 
-% Error in Skeleton (line 87)
-%                     skel.SkeletonBoneMap(i)=Bone(skel.SkeletonJointMap(skel.SkeletonConnectionsMap(i,1)),skel.SkeletonJointMap(skel.SkeletonConnectionsMap(i,2)),skel.BoneNameMap(i,:)); 
-
 
 classdef Skeleton < handle
-    %SKELETON oggetto scheletro a partire da una matrice 20x2
-    %   L'esecuzione si blocca alla chiamata del costruttore con l'errore:
-    %       Error using Skeleton (line 69)
-    %       Dimensions of matrices being concatenated are not consistent.
+    %SKELETON oggetto scheletro a partire da una matrice 20x2 e l'ID dello
+    %
+    %
     
     
     properties(Constant = true)
@@ -74,17 +68,18 @@ classdef Skeleton < handle
         
         %costruttore scheletro, istanzia anche i relativi oggetti Joint e Bone
         %Input: JointImagesIndices matrice 20x2 delle posizioni dei joint
-        function skel = Skeleton(JointImagesIndices,TrackID)
+        
+        function skel = Skeleton(JointImagesIndices)
             if (nargin>0)
                 
-                JointImagesIndices=JointImagesIndices(:,:,TrackID);
+               % JointImagesIndices=JointImagesIndices(:,:,TrackID);
                 for i=1:20,
                     skel.SkeletonJointMap(i)=Joint(JointImagesIndices(i,1),JointImagesIndices(i,2),skel.JointNameMap(i,:));
                 end
                 
                 % inizializzazione ossa scheletro con "Bone(jointA, jointB, name)"
                 for i=1:19,
-                    skel.SkeletonBoneMap(i)=Bone(skel.SkeletonJointMap(skel.SkeletonConnectionsMap(i,1)),skel.SkeletonJointMap(skel.SkeletonConnectionsMap(i,2)),skel.BoneNameMap(i,:));
+                    skel.SkeletonBoneMap(i)=Bone(skel.SkeletonJointMap(skel.SkeletonConnectionsMap(1,i)),skel.SkeletonJointMap(skel.SkeletonConnectionsMap(1,i+1)),skel.BoneNameMap(i,:));
                 end
             end
             
