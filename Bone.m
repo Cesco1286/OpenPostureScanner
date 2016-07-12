@@ -23,7 +23,7 @@ classdef Bone
         %la funzione ritorna l'angolo in gradi che forma la linea tra i due joint passati
         %come parametri rispetto l'asse X
         %per eliminare l'ambiguità sull'angolo calcolato, si utilizzerà
-        %come riferimento, il Joint con ascissa minore
+        %come riferimento, il Joint con ordinata minore
         function [angleBone] = getAngleBone(bone,joint)
             
             if joint(1).GetY<joint(2).GetY,
@@ -33,7 +33,7 @@ classdef Bone
                 rif=joint(2);
                 oth=joint(1);
             end
-            angleBone=atan((rif.GetY()-oth.GetY())/(oth.GetX()-rif.GetX()));
+            angleBone=rad2deg(atan((rif.GetY()-oth.GetY())/(oth.GetX()-rif.GetX())));
         end
         
         %ritorna l'oggetto Joint, scelto tra 1 e 2
