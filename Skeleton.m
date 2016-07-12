@@ -2,7 +2,7 @@
 % 
 % 
 
-classdef Skeleton < handle
+classdef Skeleton 
     %SKELETON oggetto scheletro a partire da una matrice 20x2 e l'ID dello
     %
     %
