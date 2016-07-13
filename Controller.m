@@ -19,6 +19,7 @@ classdef (Sealed) Controller < handle
         function acquisisci(controller)
             controller.kinect.acquisisci();
             scheletro= Skeleton(controller.kinect.getMetaDati.JointImageIndices(:,:,(controller.kinect.getSkeletonId)));
+            controller.setScheletro(scheletro);
         end
         
         %function setParametriRiferimento(controller) 
@@ -35,8 +36,12 @@ classdef (Sealed) Controller < handle
             controller.kinect.stopCamera();
         end
         
+        function controller=setScheletro(controller,scheletro)
+            controller.scheletro=scheletro;
+        end
+        
        %matrice 20x2 allo scheletro . va creato all'interno
-       %dell'acquisizione (che comprenderà acquisizione kinect e scheletro
+       %dell'acquisizione (che comprenderÃ  acquisizione kinect e scheletro
        %scheletro , bb,parametri riferimento 
         
        
