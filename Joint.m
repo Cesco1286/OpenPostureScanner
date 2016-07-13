@@ -32,6 +32,20 @@ classdef Joint
             return;
         end
         
+        % sameName controlla se la stringa passata è simile al nome del
+        % joint
+        function ok = sameName(joint, stringa)
+            sizeS=size(stringa);
+            if sizeS<=size(joint.Name),
+                if joint.Name(1:size(2))==stringa,
+                    ok = 1;
+                end
+            else
+                ok = 0;
+            end
+            return;
+        end
+        
     end
     
 end
