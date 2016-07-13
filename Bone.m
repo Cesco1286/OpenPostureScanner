@@ -12,36 +12,75 @@ classdef Bone
     end
     
     methods
+        %costruttore
         function bone = Bone(jointA, jointB, name)
             if (nargin>0)
                 bone.Joint=[jointA, jointB];
-                bone.AngleBone=bone.getAngleBone(bone.Joint);
+                bone.AngleBone=bone.getAngle(bone.Joint);
                 bone.Name=name;
             end
+        end
+        
+        
+        
+        %% funzioni GET
+        
+        %ritorna l'oggetto Joint, scelto tra 1 e 2, ma anche per nome,
+        %default il joint 1 nel caso il nome del joint 2 non corrispondesse
+        function [jointA] = GetJoint(bone, joint)
+            if(joint == 1 || joint == 2),
+                jointA=bone.Joint(joint);
+            else
+                jointA = bone.Joint(1);
+                jointB = bone.Joint(2);
+                if jointB.sameName(joint)
+                    jointA=jointB;
+                end
+                return;
+            end
+        end
+        
+        %funzione GET per AngleBone
+        function angle = GetAngleBone(bone)
+            angle=bone.AngleBone;
+            return;
+        end
+        
+        %GET name
+        function name = GetName(bone)
+            name=bone.Name;
+            return
+        end
+        
+        %% funzioni accessorie
+        
+        % sameName controlla se la stringa passata è simile al nome del
+        % bone
+        function ok = sameName(bone, stringa)
+            sizeS=length(stringa);
+            ok=0;
+            if sizeS<=length(bone.Name),
+                if bone.Name(1:sizeS)==stringa,
+                    ok = 1;
+                end
+            end
+            return;
         end
         
         %la funzione ritorna l'angolo in gradi che forma la linea tra i due joint passati
         %come parametri rispetto l'asse X
         %per eliminare l'ambiguità sull'angolo calcolato, si utilizzerà
         %come riferimento, il Joint con ordinata minore
-        function [angleBone] = getAngleBone(bone,joint)
+        function [angleBone] = getAngle(bone, joint)
             
             if joint(1).GetY<joint(2).GetY,
-                rif=joint(1);
-                oth=joint(2);
+                angleBone=rad2deg(atan((joint(1).GetY()-joint(2).GetY())/(joint(2).GetX()-joint(1).GetX())));
             else
-                rif=joint(2);
-                oth=joint(1);
+                angleBone=rad2deg(atan((joint(2).GetY()-joint(1).GetY())/(joint(1).GetX()-joint(2).GetX())));
             end
-            angleBone=rad2deg(atan((rif.GetY()-oth.GetY())/(oth.GetX()-rif.GetX())));
+            
         end
         
-        %ritorna l'oggetto Joint, scelto tra 1 e 2
-        function [joint] = GetJoint(bone, num)
-            joint=bone.Joint(num);
-            return;
-        end
-    end
+    end    %end methods
     
 end
-
