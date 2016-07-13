@@ -16,7 +16,7 @@ classdef (Sealed) Controller < handle
             controller.kinect.setAngle();
         end
         
-        function acquisisci(controller)
+        function  controller=acquisisci(controller)
             controller.kinect.acquisisci();
             scheletro= Skeleton(controller.kinect.getMetaDati.JointImageIndices(:,:,(controller.kinect.getSkeletonId)));
             controller.setScheletro(scheletro);
