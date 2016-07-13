@@ -1,9 +1,9 @@
 %% VERSION 1: Valerio Dodet - DATE: 20/06/2016
-% 
-% 
+%
+%
 
-classdef Skeleton 
-    %SKELETON oggetto scheletro a partire da una matrice 20x2 e l'ID dello
+classdef Skeleton
+    %SKELETON oggetto scheletro a partire da una matrice 20x2
     %
     %
     
@@ -33,7 +33,7 @@ classdef Skeleton
         %         Ankle_Right = 19;
         %         Foot_Right = 20;
         
-        BoneNameMap = char('HipBone','schienaBone','HeadBone','LeftShoulderBone','LeftBraccioBone','LeftAvambraccioBone','LeftHandBone','RightShoulderBone','RightBraccioBone','RightAvambraccioBone','RightHandBone','RightHipBone','RightCosciaBone','RightStincoBone','RightFootBone','LeftHipBone','LeftCosciaBone','LeftStincoBone','LeftFootBone');
+        BoneNameMap = char('HipBone','BackBone','HeadBone','LeftShoulderBone','LeftBraccioBone','LeftAvambraccioBone','LeftHandBone','RightShoulderBone','RightBraccioBone','RightAvambraccioBone','RightHandBone','RightHipBone','RightCosciaBone','RightStincoBone','RightFootBone','LeftHipBone','LeftCosciaBone','LeftStincoBone','LeftFootBone');
         
         SkeletonConnectionsMap = [[1 2],[2 3],[3 4],[3 5],[5 6],[6 7],[7 8],[3 9],[9 10],[10 11],[11 12],[1 17],[17 18],[18 19],[19 20],[1 13],[13 14],[14 15],[15 16]];
     end
@@ -42,7 +42,7 @@ classdef Skeleton
         SkeletonBoneMap=Bone();
         %         SkeletonBoneMap = [
         %             HipBone;
-        %             schienaBone;
+        %             BackBone;
         %             HeadBone;
         %             LeftShoulderBone;
         %             LeftBraccioBone;
@@ -69,10 +69,10 @@ classdef Skeleton
         %costruttore scheletro, istanzia anche i relativi oggetti Joint e Bone
         %Input: JointImagesIndices matrice 20x2 delle posizioni dei joint
         
-        function skel = Skeleton(JointImagesIndices)
+        function skel = Skeleton(JointImagesIndices, TrackID)
             if (nargin>0)
                 
-               % JointImagesIndices=JointImagesIndices(:,:,TrackID);
+                JointImagesIndices=JointImagesIndices(:,:,TrackID);
                 for i=1:20,
                     skel.SkeletonJointMap(i)=Joint(JointImagesIndices(i,1),JointImagesIndices(i,2),skel.JointNameMap(i,:));
                 end
@@ -86,24 +86,41 @@ classdef Skeleton
             return;
         end
         
-%         %costruttore vuoto per scheletro
-%         function skel = Skeleton()
-%             skel;
-%         end
+        %         %costruttore vuoto per scheletro
+        %         function skel = Skeleton()
+        %             skel;
+        %         end
         
         
-        %la funzione ritorna un oggetto Bone
-        %Input: bone può essere il numero riferito alla posizione in
-        %       SkeletonConnectionMap ma anche il nome dell'osso
-        function [bone] = getBone(skel, bone)
-            if (bone>0 && bone <20),
-                bone=skel.SkeletonConnectionMap(bone);
+        %la funzione ritorna la mappa dei Joint o un joint solo nel caso
+        %sia specificato il numero assegnato automaticamente dalla kinect
+        function tuttiJoint = getJointMap(skel,num)
+            if (nargin<2),
+                tuttiJoint=skel.SkeletonJointMap;
             else
-                bone=skel.SkeletonConnectionMap(bone.Name==bone);
+                tuttiJoint=skel.SkeletonJointMap(num);
             end
             return;
         end
         
+        %la funzione ritorna un oggetto Bone
+        %Input: bone può essere il numero riferito alla posizione in
+        %       SkeletonConnectionMap ma anche il nome dell'osso
+        % viene utilizzata la funzione sameName di Bone.m
+        function [result] = getBone(skel, bone)
+            if length(bone)==1,
+                result=skel.SkeletonBoneMap(bone);
+            else
+                for i=1:19
+                    result=skel.SkeletonBoneMap(i);
+                    ok=result.sameName(bone);
+                    if ok
+                        break
+                    end
+                end %end for
+            end %end if
+            return;
+        end
         
     end
     
