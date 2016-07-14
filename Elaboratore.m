@@ -97,7 +97,7 @@ classdef Elaboratore < handle
         
         
         %% funzioni di elaborazione
-        function errori=CalcoloErrori(elab, paramUtenti)
+        function errori=CalcoloErrori(elab, paramUtenti) %?? a che serve restituire la variabile 'errori' ?
             %          angle_backbone_shoulders;
             %          angle_backbone;
             %          angle_hipbone_backbone;
