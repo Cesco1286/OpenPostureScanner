@@ -1,4 +1,10 @@
- function mat= coloraErrori(parametro2errore)
+%% funzione di visualizzazione errori per colori sulla sagoma
+
+% Data una mappa parametro2errore restituisce un matrice 640x480x3 con
+% valori positivi nelle zone che circondano le coordinate degli errori
+% 
+
+function mat= coloraErrori(parametro2errore)
     
    
     
@@ -17,10 +23,13 @@
         y=valore(3);
         x1=valore(4);
         y1=valore(5);
-        if errore>0,
-        	mat( max( y-(offset+errore) ,1):min( (y+offset+errore),m) , max(x-(offset+errore),1): min(x+offset+errore,n),1 )=errore;
+        if errore<1.5                 %un commentino please
+            mat( max( y-(offset+errore) ,1):min( (y+offset+errore),m) , max(x-(offset+errore),1): min(x+offset+errore,n), 2)=errore;
+            mat( max( y1-(offset+errore) ,1):min( (y1+offset+errore),m) , max(x1-(offset+errore),1): min(x1+offset+errore,n), 2 )=errore;
+        else
+            mat( max( y-(offset+errore) ,1):min( (y+offset+errore),m) , max(x-(offset+errore),1): min(x+offset+errore,n),1 )=errore;
             mat( max( y1-(offset+errore) ,1):min( (y1+offset+errore),m) , max(x1-(offset+errore),1): min(x1+offset+errore,n), 1 )=errore;
-         end 
+        end 
 	end    
-   return;             
+    return;            
 end
