@@ -61,8 +61,8 @@ classdef Elaboratore < handle
                 
                 %assegnazione angle_backbone
                 misura=skel.getBone('BackBone').GetAngleBone();
-                x1=(abs(skel.getJointMap(2).GetX()-skel.getJointMap(3).GetX()))/2;
-                y1=(abs(skel.getJointMap(2).GetY()-skel.getJointMap(3).GetY()))/2;
+                x1=((abs(skel.getJointMap(2).GetX()-skel.getJointMap(3).GetX()))/2)+min(skel.getJointMap(2).GetX(),skel.getJointMap(3).GetX());
+                y1=((abs(skel.getJointMap(2).GetY()-skel.getJointMap(3).GetY()))/2)+min(skel.getJointMap(3).GetY(),skel.getJointMap(2).GetY());
                 elab.misure('angle_backbone')=[misura, x1, y1, x1, y1];
                 
                 %assegnazione angle_hipbone_backbone
@@ -137,31 +137,36 @@ classdef Elaboratore < handle
         %% funzioni GET per attributi
         % funzione Get per angle_backbone_shoulders
         function angle= Get_angle_backbone_shoulders(elab)
-            angle=elab.angle_backbone_shoulders;
+            angle=elab.misure('angle_backbone_shoulders');
+            angle=angle(1);
             return;
         end
         
         % funzione Get per angle_backbone
         function  angle = Get_angle_backbone(elab)
-            angle=elab.angle_backbone;
+            angle=elab.misure('angle_backbone');
+            angle=angle(1);
             return;
         end
         
         % funzione Get per angle_hipbone_backbone
         function angle = Get_angle_hipbone_backbone(elab)
-            angle=elab.angle_hipbone_backbone;
+            angle=elab.misure('angle_hipbone_backbone');
+            angle=angle(1);
             return;
         end
         
         % funzione Get per hip_right_left
         function angle = Get_hip_right_left(elab)
-            angle=elab.hip_right_left;
+            angle=elab.misure('hip_right_left');
+            angle=angle(1);
             return;
         end
         
         % funzione Get per knee_right_left
         function angle = Get_knee_right_left(elab)
-            angle=elab.knee_right_left;
+            angle=elab.misure('knee_right_left');
+            angle=angle(1);
             return;
         end
     end
