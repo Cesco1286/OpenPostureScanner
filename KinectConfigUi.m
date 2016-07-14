@@ -22,7 +22,7 @@ function varargout = KinectConfigUi(varargin)
 
 % Edit the above text to modify the response to help KinectConfigUi
 
-% Last Modified by GUIDE v2.5 11-Jul-2016 17:33:32
+% Last Modified by GUIDE v2.5 14-Jul-2016 19:45:58
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -120,3 +120,34 @@ function edit1_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes during object creation, after setting all properties.
+function axes1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to axes1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: place code in OpeningFcn to populate axes1
+
+
+% --- Executes on button press in Plusbutton.
+function Plusbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to Plusbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+kinect = Kinect();
+angle = 1;
+kinect.srcDepth.CameraElevationAngle =kinect.srcDepth.CameraElevationAngle+angle;
+
+
+% --- Executes on button press in Minusbutton.
+function Minusbutton_Callback(hObject, eventdata, handles)
+% hObject    handle to Minusbutton (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+kinect = Kinect();
+angle = -1;
+kinect.srcDepth.CameraElevationAngle =kinect.srcDepth.CameraElevationAngle+angle;
+
+
