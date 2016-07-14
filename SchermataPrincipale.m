@@ -87,6 +87,7 @@ function ImpostaKinect_Callback(hObject, eventdata, handles)
 % hObject    handle to ImpostaKinect (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+KinectConfigUi();
 
 
 % --- Executes on button press in ImpostaBB.
@@ -108,6 +109,6 @@ function axes2_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to axes2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
-% in questa funzione ci sar‡ il comando 'imshow' che dovr‡ mostrare
+% in questa funzione ci sar√† il comando 'imshow' che dovr√† mostrare
 % l'immagine di output
 % Hint: place code in OpeningFcn to populate axes2
