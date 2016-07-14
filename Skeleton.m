@@ -35,7 +35,7 @@ classdef Skeleton
         
         BoneNameMap = char('HipBone','BackBone','HeadBone','LeftShoulderBone','LeftBraccioBone','LeftAvambraccioBone','LeftHandBone','RightShoulderBone','RightBraccioBone','RightAvambraccioBone','RightHandBone','RightHipBone','RightCosciaBone','RightStincoBone','RightFootBone','LeftHipBone','LeftCosciaBone','LeftStincoBone','LeftFootBone');
         
-        SkeletonConnectionsMap = [[1 2],[2 3],[3 4],[3 5],[5 6],[6 7],[7 8],[3 9],[9 10],[10 11],[11 12],[1 17],[17 18],[18 19],[19 20],[1 13],[13 14],[14 15],[15 16]];
+        SkeletonConnectionsMap = [[1 2];[2 3];[3 4];[3 5];[5 6];[6 7];[7 8];[3 9];[9 10];[10 11];[11 12];[1 17];[17 18];[18 19];[19 20];[1 13];[13 14];[14 15];[15 16]];
     end
     properties
         SkeletonJointMap=Joint();
@@ -72,15 +72,15 @@ classdef Skeleton
         function skel = Skeleton(JointImagesIndices)
             if (nargin>0)
                 
-               % JointImagesIndices=JointImagesIndices(:,:,TrackID);
+                %JointImagesIndices=JointImagesIndices(:,:,TrackID);
+                
                 for i=1:20,
                     skel.SkeletonJointMap(i)=Joint(JointImagesIndices(i,1),JointImagesIndices(i,2),skel.JointNameMap(i,:));
                 end
                 
                 % inizializzazione ossa scheletro con "Bone(jointA, jointB, name)"
                 for i=1:19,
-                    skel.SkeletonBoneMap(i)=Bone(skel.SkeletonJointMap(skel.SkeletonConnectionsMap(1,i)),skel.SkeletonJointMap(skel.SkeletonConnectionsMap(1,i+1)),skel.BoneNameMap(i,:));
-                end
+                    skel.SkeletonBoneMap(i)=Bone(skel.SkeletonJointMap(skel.SkeletonConnectionsMap(i,1)),skel.SkeletonJointMap(skel.SkeletonConnectionsMap(i,2)),skel.BoneNameMap(i,:));                end
             end
             
             return;
