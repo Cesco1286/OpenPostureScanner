@@ -69,10 +69,10 @@ classdef Skeleton
         %costruttore scheletro, istanzia anche i relativi oggetti Joint e Bone
         %Input: JointImagesIndices matrice 20x2 delle posizioni dei joint
         
-        function skel = Skeleton(JointImagesIndices, TrackID)
+        function skel = Skeleton(JointImagesIndices)
             if (nargin>0)
                 
-                JointImagesIndices=JointImagesIndices(:,:,TrackID);
+               % JointImagesIndices=JointImagesIndices(:,:,TrackID);
                 for i=1:20,
                     skel.SkeletonJointMap(i)=Joint(JointImagesIndices(i,1),JointImagesIndices(i,2),skel.JointNameMap(i,:));
                 end
@@ -105,7 +105,9 @@ classdef Skeleton
         
         %la funzione ritorna un oggetto Bone
         %Input: bone può essere il numero riferito alla posizione in
-        %       SkeletonConnectionMap ma anche il nome dell'osso
+        %       SkeletonConnectionMap ma anche il nome dell'osso. Nel caso
+        %       l'osso cercato non venga trovato, viene restituito un
+        %       oggetto osso con attributi vuoti
         % viene utilizzata la funzione sameName di Bone.m
         function [result] = getBone(skel, bone)
             if length(bone)==1,
@@ -116,6 +118,8 @@ classdef Skeleton
                     ok=result.sameName(bone);
                     if ok
                         break
+                    elseif ~ok && i==19
+                        result=Bone();
                     end
                 end %end for
             end %end if
