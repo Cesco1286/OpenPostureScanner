@@ -5,7 +5,7 @@ classdef Elaboratore < handle
     %   delle ossa dello scheletro e le posizioni dei Joint dello
     %   scheletro. Queste informazioni vengono confrontate con gli
     %   attributi di un oggetto ParametriUtente. Attualmente la
-    %   BalanceBoard non è prevista nell'elaborazione degli errori
+    %   BalanceBoard non Ã¨ prevista nell'elaborazione degli errori
     
     properties
         %% misure sull'oggetto skeleton
@@ -48,7 +48,7 @@ classdef Elaboratore < handle
     
     methods
         %costruttore, attualmente vengono elaborati solo i dati
-        %dell'oggetto skeleton, verrà poi aggiunta la misura della
+        %dell'oggetto skeleton, verrÃ  poi aggiunta la misura della
         %balanceboard
         % Input: oggetto Skeleton
         % Funzioni: vengono utilizzate le funzioni GET di Skeleton.m,
@@ -92,19 +92,19 @@ classdef Elaboratore < handle
 %          hip_right_left;
 %          knee_right_left;
             errori(1)=paramUtenti.Get_angle_backbone_shoulders()-elab.Get_angle_backbone_shoulders();
-            err_angle_backbone_shoulders=errori(1);
+            elab.err_angle_backbone_shoulders=errori(1);
            
             errori(2)=paramUtenti.Get_angle_backbone()-elab.Get_angle_backbone();
-            err_angle_backbone=errori(2);
+            elab.err_angle_backbone=errori(2);
             
             errori(3)=paramUtenti.Get_angle_hipbone_backbone()-elab.Get_angle_hipbone_backbone();
-            err_angle_hipbone_backbone=errori(3);
+            elab.err_angle_hipbone_backbone=errori(3);
             
             errori(4)=paramUtenti.Get_hip_right_left()-elab.Get_hip_right_left();
-            err_hip_right_left=errori(4);
+            elab.err_hip_right_left=errori(4);
             
             errori(5)=paramUtenti.Get_knee_right_left()-elab.Get_knee_right_left();
-            err_knee_right_left=errori(5);
+            elab.err_knee_right_left=errori(5);
             
             return;
         end
