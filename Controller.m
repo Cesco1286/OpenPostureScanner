@@ -2,7 +2,7 @@ classdef (Sealed) Controller < handle
     properties
         kinect;
         balanceBoard;
-        parametriRiferimento;
+        parametriUtente;
         scheletro; 
     end
     
