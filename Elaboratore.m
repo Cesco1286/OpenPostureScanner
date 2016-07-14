@@ -1,5 +1,5 @@
 classdef Elaboratore < handle
-       
+    
     %ELABORATORE si occupa di calcolare gli errori di postura
     %   i parametri su cui vengono calcolati gli errori sono gli angoli
     %   delle ossa dello scheletro e le posizioni dei Joint dello
@@ -8,41 +8,27 @@ classdef Elaboratore < handle
     %   BalanceBoard non è prevista nell'elaborazione degli errori
     
     properties
-        %% misure sull'oggetto skeleton
         %asse delle spalle, un oggetto Bone(jointA, jointB, name) calcolato tra i Joint Shoulder_Left e
         %Shoulder_Right
         shoulder_axis=Bone();
         
-        %   angolo schiena spalle
-        angle_backbone_shoulders;
+        %% misure sull'oggetto skeleton
+        % mappa delle misure sullo scheletro rilevato
+        % KeySet: nome misura
+        % ValueSet: [|misura|, X1, Y1, X2, Y2]
+        keySet={'angle_backbone_shoulders','angle_backbone','angle_hipbone_backbone','hip_right_left','knee_right_left'};
+        valueSet={[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0]};
+        misure;
         
-        %   angolo schiena
-        angle_backbone;
-        
-        %   angolo hipbone e schiena
-        angle_hipbone_backbone;
-        
-        %   differenza tra l'altezza dei Joint dei fianchi
-        hip_right_left;
-        
-        %   differenza tra l'altezza dei Joint delle ginocchia
-        knee_right_left;
         
         %% scostamenti calcolati tra i parametri utente e le misure rilevate
-        % errore angolo schiena spalle
-        err_angle_backbone_shoulders;
+        % mappa degli errori calcolati
+        % KeySet: nome errore
+        % ValueSet: [|errore|, X1, Y1, X2, Y2]
+        ErrKeySet={'err_angle_backbone_shoulders','err_angle_backbone','err_angle_hipbone_backbone','err_hip_right_left','err_knee_right_left'};
+        ErrValueSet={[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0]};
+        errori;
         
-        % errore angolo schiena
-        err_angle_backbone;
-        
-        % errore angolo hipbone e schiena
-        err_angle_hipbone_backbone;
-        
-        % errore differenza tra l'altezza dei Joint dei fianchi
-        err_hip_right_left;
-        
-        % errore differenza tra l'altezza dei Joint delle ginocchia
-        err_knee_right_left;
         
     end
     
@@ -54,6 +40,9 @@ classdef Elaboratore < handle
         % Funzioni: vengono utilizzate le funzioni GET di Skeleton.m,
         % Bone.m e Joint.m
         function elab = Elaboratore(skel)
+            elab.misure=containers.Map(elab.keySet,elab.valueSet,'UniformValues',false);
+            elab.errori=containers.Map(elab.ErrKeySet,elab.ErrValueSet,'UniformValues',false);
+            
             if(nargin>0)
                 %assegnazione shoulder_axis, i numeri nei parametri sono
                 %riferiti alla numerazione assegnata dalla kinect,
@@ -63,55 +52,89 @@ classdef Elaboratore < handle
                 elab.shoulder_axis=Bone(spallaSinistra,spallaDestra,'Shoulder_Axis');
                 
                 %assegnazione angle_backbone_shoulders
-                elab.angle_backbone_shoulders=abs(elab.shoulder_axis.GetAngleBone()-skel.getBone('BackBone').GetAngleBone());
+                misura=abs(elab.shoulder_axis.GetAngleBone()-skel.getBone('BackBone').GetAngleBone());
+                x1=spallaDestra.GetX();
+                y1=spallaDestra.GetY();
+                x2=spallaSinistra.GetX();
+                y2=spallaSinistra.GetY();
+                elab.misure('angle_backbone_shoulders')=[misura, x1, y1, x2, y2];
                 
                 %assegnazione angle_backbone
-                elab.angle_backbone=skel.getBone('BackBone').GetAngleBone();
+                misura=skel.getBone('BackBone').GetAngleBone();
+                x1=(abs(skel.getJointMap(2).GetX()-skel.getJointMap(3).GetX()))/2;
+                y1=(abs(skel.getJointMap(2).GetY()-skel.getJointMap(3).GetY()))/2;
+                elab.misure('angle_backbone')=[misura, x1, y1, x1, y1];
                 
                 %assegnazione angle_hipbone_backbone
-                elab.angle_hipbone_backbone=abs(skel.getBone('HipBone').GetAngleBone())+abs(skel.getBone('BackBone').GetAngleBone());
-           
+                misura=abs(skel.getBone('HipBone').GetAngleBone())+abs(skel.getBone('BackBone').GetAngleBone());
+                x1=skel.getJointMap(1).GetX();
+                y1=skel.getJointMap(1).GetY();
+                elab.misure('angle_hipbone_backbone')=[misura, x1, y1, x1, y1];
+                
                 %assegnazione hip_right_left, i numeri nei parametri sono
                 %riferiti alla numerazione assegnata dalla kinect,
                 %esplicitata nella classe Skeleton
-                elab.hip_right_left=abs(skel.getJointMap(13).GetY()-skel.getJointMap(17).GetY());
+                x1=skel.getJointMap(13).GetX();
+                y1=skel.getJointMap(13).GetY();
+                x2=skel.getJointMap(17).GetX();
+                y2=skel.getJointMap(17).GetY();
+                misura=abs(y1-y2);
+                elab.misure('hip_right_left')=[misura, x1, y1, x2, y2];
+                
                 
                 %assegnazione knee_right_left, i numeri nei parametri sono
                 %riferiti alla numerazione assegnata dalla kinect,
                 %esplicitata nella classe Skeleton
-                elab.knee_right_left=abs(skel.getJointMap(14).GetY()-skel.getJointMap(18).GetY());
+                x1=skel.getJointMap(14).GetX();
+                y1=skel.getJointMap(14).GetY();
+                x2=skel.getJointMap(18).GetX();
+                y2=skel.getJointMap(18).GetY();
+                misura=abs(y1-y2);
+                elab.misure('knee_right_left')=[misura, x1, y1, x2, y2];
+                
             end
-            end
-
+        end
         
-        %% funzioni di elaborazione 
+        
+        %% funzioni di elaborazione
         function errori=CalcoloErrori(elab, paramUtenti)
-%          angle_backbone_shoulders;
-%          angle_backbone;
-%          angle_hipbone_backbone;
-%          hip_right_left;
-%          knee_right_left;
-            errori(1)=paramUtenti.Get_angle_backbone_shoulders()-elab.Get_angle_backbone_shoulders();
-            elab.err_angle_backbone_shoulders=errori(1);
-           
-            errori(2)=paramUtenti.Get_angle_backbone()-elab.Get_angle_backbone();
-            elab.err_angle_backbone=errori(2);
+            %          angle_backbone_shoulders;
+            %          angle_backbone;
+            %          angle_hipbone_backbone;
+            %          hip_right_left;
+            %          knee_right_left;
             
-            errori(3)=paramUtenti.Get_angle_hipbone_backbone()-elab.Get_angle_hipbone_backbone();
-            elab.err_angle_hipbone_backbone=errori(3);
+            value=elab.misure('angle_backbone_shoulders');
+            value(1)=paramUtenti.Get_angle_backbone_shoulders()-elab.Get_angle_backbone_shoulders();
+            elab.errori('err_angle_backbone_shoulders')=value;
             
-            errori(4)=paramUtenti.Get_hip_right_left()-elab.Get_hip_right_left();
-            elab.err_hip_right_left=errori(4);
             
-            errori(5)=paramUtenti.Get_knee_right_left()-elab.Get_knee_right_left();
-            elab.err_knee_right_left=errori(5);
+            value=elab.misure('angle_backbone');
+            value(1)=paramUtenti.Get_angle_backbone()-elab.Get_angle_backbone();
+            elab.errori('err_angle_backbone')=value;
+            
+            value=elab.misure('angle_hipbone_backbone');
+            value(1)=paramUtenti.Get_angle_hipbone_backbone()-elab.Get_angle_hipbone_backbone();
+            elab.errori('err_angle_hipbone_backbone')=value;
+            
+            value=elab.misure('hip_right_left');
+            value(1)=paramUtenti.Get_hip_right_left()-elab.Get_hip_right_left();
+            elab.errori('err_hip_right_left')=value;
+            
+            value=elab.misure('knee_right_left');
+            value(1)=paramUtenti.Get_knee_right_left()-elab.Get_knee_right_left();
+            elab.errori('err_knee_right_left')=value;
             
             return;
         end
-
-   
-    
-     %% funzioni GET per attributi
+        
+        % funzione di export della mappa errori e del KeySet
+        function export=Export(elab)
+            export=elab.errori;
+            return;
+        end
+        
+        %% funzioni GET per attributi
         % funzione Get per angle_backbone_shoulders
         function angle= Get_angle_backbone_shoulders(elab)
             angle=elab.angle_backbone_shoulders;
@@ -141,7 +164,7 @@ classdef Elaboratore < handle
             angle=elab.knee_right_left;
             return;
         end
-         end
-        
+    end
+    
 end
 
