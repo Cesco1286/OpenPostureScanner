@@ -40,10 +40,11 @@ classdef (Sealed) Controller < handle
             controller.scheletro=scheletro;
         end
         
-       %matrice 20x2 allo scheletro . va creato all'interno
-       %dell'acquisizione (che comprenderà acquisizione kinect e scheletro
-       %scheletro , bb,parametri riferimento 
-        
+      
+        function controller=setParametriUtente(controller,param)
+            controller.parametriUtente= param; 
+        end 
+       
        
     end 
     methods (Static) 
