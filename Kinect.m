@@ -74,7 +74,7 @@ classdef Kinect < handle
                 % completamente tasparente all'utente dell'applicazione, e
                 % in caso di mancato riconoscimento dello scheletro, viene
                 % mostrato un popup che segnala l'errore.
-                
+                %il ciclo è addirittura non piu necessario, però va sostituito con un minimo di attenzione
                 
                     trigger([kinect.vidDepth kinect.vidRGB]);
                     [DepthFrame, ts, metaDataDepth] = getdata(kinect.vidDepth);
