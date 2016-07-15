@@ -83,7 +83,7 @@ function buttonStartPreview_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 controller= Controller.getInstance(); % prendiamo l'istanza del controller
-controller.launchKinectPreview(controller); 
+controller.startKinectPreview(); 
 
 % --- Executes on button press in pushbutton4.
 function pushbutton4_Callback(hObject, eventdata, handles)
