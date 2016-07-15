@@ -35,18 +35,23 @@ classdef Kinect < handle
            end
             
            
-        function setAngle(kinect)
-        preview(kinect.vidRGB);
-        angleOK=0;
-        while angleOK==0,
-            angle=input('inserire l''angolo da aggiungere all''attuale\n');
-            if kinect.srcDepth.CameraElevationAngle+angle>=0 && kinect.srcDepth.CameraElevationAngle+angle<=27
-                kinect.srcDepth.CameraElevationAngle=kinect.srcDepth.CameraElevationAngle+angle;
-            end
-            angleOK=input('se l''angolo è ok inserire 1, 0 altrimenti');
+%         function setAngle(kinect)
+%         preview(kinect.vidRGB);
+%         angleOK=0;
+%         while angleOK==0,
+%             angle=input('inserire l''angolo da aggiungere all''attuale\n');
+%             if kinect.srcDepth.CameraElevationAngle+angle>=0 && kinect.srcDepth.CameraElevationAngle+angle<=27
+%                 kinect.srcDepth.CameraElevationAngle=kinect.srcDepth.CameraElevationAngle+angle;
+%             end
+%             angleOK=input('se l''angolo è ok inserire 1, 0 altrimenti');
+%         end
+%         closepreview(kinect.vidRGB);
+%         end
+
+      function kinect= setAngle(kinect,angle)
+              kinect.srcDepth.CameraElevationAngle=kinect.srcDepth.CameraElevationAngle+angle;
         end
-        closepreview(kinect.vidRGB);
-        end
+
 
         function kinect = acquisisci(kinect)
             stop([kinect.vidDepth kinect.vidRGB]);
@@ -58,7 +63,7 @@ classdef Kinect < handle
             kinect.vidDepth.TriggerRepeat=200;
             kinect.vidRGB.TriggerRepeat=200;
             triggerconfig([kinect.vidDepth kinect.vidRGB],'manual');
-            
+            skID=99;
             %% start acquisizione
             acquired=0;
             start([kinect.vidDepth kinect.vidRGB]);
@@ -80,13 +85,19 @@ classdef Kinect < handle
                     end
                     
                     %skeleton=skeletonViewer(metaDataDepth.JointImageIndices,imgColor,1,skID);
-                    acquired=input('inserire 1 se l''acquisizione è corretta, 0 altrimenti\n');
-                end
+                    if skID==99,
+                        ScheletroAcqError(); %%QUANDO LO SCHELETRO NON VIENE RICONOSCIUTO, l'esecuzione di questa funzione si blocca
+                        stop([kinect.vidDepth kinect.vidRGB]);%e viene mostrato un popup
+                        return;
+                    else acquired=1;
+                    end
+                    end
             end
 
               kinect.setRGBFrame(RGBFrame);
               kinect.setMetadati(metaDataDepth);
-              kinect.setSkeletonId(skID);
+              
+              kinect.setSkeletonId(skID); 
               stop([kinect.vidDepth kinect.vidRGB]);
             
         end
