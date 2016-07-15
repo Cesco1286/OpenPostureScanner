@@ -73,14 +73,7 @@ function varargout = KinectConfigUi_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
 
 
-% --- Executes on button press in buttonCallSetAngle.
-function buttonCallSetAngle_Callback(hObject, eventdata, handles)
-% hObject    handle to buttonCallSetAngle (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-controller= Controller.getInstance(); % prendiamo l'istanza del controller
-controller.setKinectAngle(controller); 
 
 
 
