@@ -68,7 +68,14 @@ classdef Kinect < handle
             acquired=0;
             start([kinect.vidDepth kinect.vidRGB]);
             while acquired==0,
-                if input('premere 1 per fare una nuova acquisizione\n'),
+                %if input('premere 1 per fare una nuova acquisizione\n'), %
+                % nella versione precedente, questa funzione ciclava
+                % sull'input da tastiera. adesso l'acquisizione è diventata
+                % completamente tasparente all'utente dell'applicazione, e
+                % in caso di mancato riconoscimento dello scheletro, viene
+                % mostrato un popup che segnala l'errore.
+                
+                
                     trigger([kinect.vidDepth kinect.vidRGB]);
                     [DepthFrame, ts, metaDataDepth] = getdata(kinect.vidDepth);
                     [RGBFrame, ts_rgb, metaDataRGB] = getdata(kinect.vidRGB);
@@ -91,8 +98,8 @@ classdef Kinect < handle
                         return;
                     else acquired=1;
                     end
-                    end
-            end
+             end
+            
 
               kinect.setRGBFrame(RGBFrame);
               kinect.setMetadati(metaDataDepth);
