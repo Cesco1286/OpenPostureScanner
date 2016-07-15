@@ -69,10 +69,10 @@ classdef Skeleton
         %costruttore scheletro, istanzia anche i relativi oggetti Joint e Bone
         %Input: JointImagesIndices matrice 20x2 delle posizioni dei joint
         
-        function skel = Skeleton(JointImagesIndices,TrackID)
+        function skel = Skeleton(JointImagesIndices)
             if (nargin>0)
                 
-                JointImagesIndices=JointImagesIndices(:,:,TrackID);
+                %JointImagesIndices=JointImagesIndices(:,:,TrackID);
                 
                 for i=1:20,
                     skel.SkeletonJointMap(i)=Joint(JointImagesIndices(i,1),JointImagesIndices(i,2),skel.JointNameMap(i,:));
