@@ -97,7 +97,11 @@ classdef Elaboratore < handle
         
         
         %% funzioni di elaborazione
-        function errori=CalcoloErrori(elab, paramUtenti) %?? a che serve restituire la variabile 'errori' ?
+        
+        % CalcoloErrori, è effettivamente un SET dei valori della mappa "errori"
+        % funziona per side effect. 
+        % Output: void
+        function errori=CalcoloErrori(elab, paramUtenti) %?? a che serve restituire la variabile 'errori' ? // a niente
             %          angle_backbone_shoulders;
             %          angle_backbone;
             %          angle_hipbone_backbone;
@@ -128,7 +132,8 @@ classdef Elaboratore < handle
             return;
         end
         
-        % funzione di export della mappa errori e del KeySet
+        % funzione di export della mappa errori, effettivamente come una GET
+        % Output: la mappa degli errori
         function export=Export(elab)
             export=elab.errori;
             return;
