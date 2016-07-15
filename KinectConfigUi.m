@@ -136,9 +136,9 @@ function Plusbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to Plusbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-kinect = Kinect();
+controller = Controller.getInstance();
 angle = 1;
-kinect.srcDepth.CameraElevationAngle =kinect.srcDepth.CameraElevationAngle+angle;
+controller.setKinectAngle(angle);
 
 
 % --- Executes on button press in Minusbutton.
@@ -146,8 +146,6 @@ function Minusbutton_Callback(hObject, eventdata, handles)
 % hObject    handle to Minusbutton (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-kinect = Kinect();
+controller = Controller.getInstance();
 angle = -1;
-kinect.srcDepth.CameraElevationAngle =kinect.srcDepth.CameraElevationAngle+angle;
-
-
+controller.setKinectAngle(angle);
