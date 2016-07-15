@@ -8,6 +8,7 @@ classdef (Sealed) Controller < handle
         parametriUtente;
         scheletro; 
         elaboratore;
+        errore2parametro;
     end
     
     methods 
@@ -16,8 +17,9 @@ classdef (Sealed) Controller < handle
             %controller.balanceBoard=BalanceBoard();
         end
         
-        function setKinectAngle(controller)
-            controller.kinect.setAngle();
+        function setKinectAngle(controller,angle)
+            %controller.kinect.setAngle();
+            controller.kinect.setAngle(angle);
         end
         
         %% questa funzione viene lanciata dal tasto "start" dell'ui 'SchermataPrincipale'
@@ -31,9 +33,10 @@ classdef (Sealed) Controller < handle
             controller.setScheletro(scheletro);
             elaboratore= Elaboratore(scheletro);
             controller.setElaboratore(elaboratore);
-            err=elaboratore.CalcoloErrori(controller.parametriUtente);
-            errore2parametro=elaboratore.export();
-           
+            elaboratore.CalcoloErrori(controller.parametriUtente);
+            errore2parametro=elaboratore.Export();
+            controller.setErrore2parametro(errore2parametro);
+            Visualizer(controller.kinect.metadati.SegmentationData , coloraErrori(errore2parametro)); 
         end
         
         %function setParametriRiferimento(controller) 
@@ -56,13 +59,17 @@ classdef (Sealed) Controller < handle
         
       
         function controller=setParametriUtente(controller,param)
-            controller.parametriUtente= param; 
+            controller.parametriUtente=param;
+            
         end 
        
         function controller=setElaboratore(controller,elab)
             controller.elaboratore= elab; 
         end 
        
+        function controller=setErrore2parametro(controller,err)
+            controller.errore2parametro= err; 
+        end 
        
     end 
     methods (Static) 
