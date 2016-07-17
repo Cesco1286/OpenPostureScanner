@@ -104,8 +104,10 @@ function Start_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 %controller acquisisci
 controller = Controller.getInstance;
-controller.acquisisci();
-
+I = controller.acquisisci();
+%I = imread('prova.jpg');
+axes(handles.axes2);
+imshow(I);
 
 % --- Executes during object creation, after setting all properties.
 function axes2_CreateFcn(hObject, eventdata, handles)
@@ -115,3 +117,4 @@ function axes2_CreateFcn(hObject, eventdata, handles)
 % in questa funzione ci sarà il comando 'imshow' che dovrà mostrare
 % l'immagine di output
 % Hint: place code in OpeningFcn to populate axes2
+
