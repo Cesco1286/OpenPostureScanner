@@ -31,14 +31,14 @@ classdef (Sealed) Controller < handle
         % dall'UI
         function  img =acquisisci(controller)
             controller.kinect.acquisisci();
-            scheletro= Skeleton(controller.kinect.getMetaDati.JointImageIndices(:,:,(controller.kinect.getSkeletonId)));
-            controller.setScheletro(scheletro);
-            elaboratore= Elaboratore(scheletro);
-            controller.setElaboratore(elaboratore);
-            elaboratore.CalcoloErrori(controller.parametriUtente);
-            errore2parametro=elaboratore.Export();
-            controller.setErrore2parametro(errore2parametro);
-            img = Visualizer(controller.kinect.metadati.SegmentationData , coloraErrori(errore2parametro)); 
+            schel= Skeleton(controller.kinect.getMetaDati.JointImageIndices(:,:,(controller.kinect.getSkeletonId)));
+            controller.setScheletro(schel);
+            elab=Elaboratore(schel);
+            controller.setElaboratore(elab);
+            elab.CalcoloErrori(controller.parametriUtente);
+            errore2param=elab.Export();
+            controller.setErrore2parametro(errore2param);
+            img = Visualizer(controller.kinect.metadati.SegmentationData , coloraErrori(controller.errore2parametro)); 
             return;
         end
         
