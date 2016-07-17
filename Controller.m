@@ -27,7 +27,9 @@ classdef (Sealed) Controller < handle
         %%memorizza all'interno della variabile errore2parametro la mappa
         %%con i valori e le coordinate degli errori. memorizza inoltre
         %%l'elaboratore
-        function  controller=acquisisci(controller)
+        % ritorna img, ovvero l'immagine che viene poi mostrata in axes
+        % dall'UI
+        function  img =acquisisci(controller)
             controller.kinect.acquisisci();
             scheletro= Skeleton(controller.kinect.getMetaDati.JointImageIndices(:,:,(controller.kinect.getSkeletonId)));
             controller.setScheletro(scheletro);
@@ -36,7 +38,8 @@ classdef (Sealed) Controller < handle
             elaboratore.CalcoloErrori(controller.parametriUtente);
             errore2parametro=elaboratore.Export();
             controller.setErrore2parametro(errore2parametro);
-            Visualizer(controller.kinect.metadati.SegmentationData , coloraErrori(errore2parametro)); 
+            img = Visualizer(controller.kinect.metadati.SegmentationData , coloraErrori(errore2parametro)); 
+            return;
         end
         
         %function setParametriRiferimento(controller) 
@@ -85,5 +88,3 @@ classdef (Sealed) Controller < handle
     
 
 end
-        
-        
