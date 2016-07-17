@@ -1,0 +1,3 @@
+clear();
+controller=Controller();
+SchermataPrincipale;

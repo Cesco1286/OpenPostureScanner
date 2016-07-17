@@ -1,12 +1,13 @@
-# labmul_project
+# OpenPostureScanner
 Analizzatore di postura tramite BalanceBoard della Wii e Kinect per Windows, con visualizzatore di scostamenti posturali e distribuzione peso per confronto grafico <br>
 <i>Sviluppato in Matlab</i>
-
+<br><br>
+<p>
+Il branch server è dedicato allo sviluppo dell'infrastruttura di controllo del software
+</p>
+<br><br>
 
 <b>TODO</b><br>
-definire le classi sw e le operazioni (guarda modello di dominio )
 acquisizione balance board <br>
-trovare il modo di acquisire pesi e scheletro contemporaneamente <br>
-analizzare la postura <br>
-visualizzare il risultato <br>
+acquisire balance board e kinect contemporaneamente <br>
 
