@@ -11,3 +11,9 @@ Analizzatore di postura tramite Kinect per Windows, con visualizzatore grafico d
 aggiunta funzionalità di export su file di immagine, parametri inseriti, errori rilevati<br>
 integrazione balance board<br>
 elaborazione su stream video degli errori posturali<br>
+
+<br><br>
+<b>INFO</b><br>
+Tra i file del repository viene fornita la presentazione dell'OpenPostureScanner in formato pdf<br>
+per ulteriori informazioni contattare:<br>
+dodetvalerio {@} gmail [dot] com<br>
